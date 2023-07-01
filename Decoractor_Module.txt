@@ -1,0 +1,131 @@
+#Define a module containing math functions like
+a. Add
+b. Subtract
+c. Multiply
+d. Divide
+Create a module to create a decor to print name of the math
+function, import math and decor in third file to use the function
+defined in math module and print name using decor module.
+
+#math_functions.py
+
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    return a / b
+
+
+#math_decorator.py
+
+def math_decorator(func):
+    def wrapper(*args):
+        print(f"Calling {func.__name__} function...")
+        return func(*args)
+    return wrapper
+
+
+#main.py
+from math_functions import add, subtract, multiply, divide
+from math_decorator import math_decorator
+
+@math_decorator
+def test_math_functions():
+    print(add(2, 3))
+    print(subtract(5, 1))
+    print(multiply(4, 6))
+    print(divide(10, 2))
+
+test_math_functions()
+
+========================================================================================
+
+#Define a module geometric containing functions to calculate
+area of
+a. Square
+b. Rectangle
+c. Circle
+d. Triangle
+e. IsSquare
+Create a module to create a decor to print name of the
+Geometirc function, import Geometirc and decor in third file to
+use the function defined in Geometirc module and print name
+using decor module.
+
+
+#geometric.py
+
+import math
+
+def area_square(side):
+    return side ** 2
+
+def area_rectangle(length, width):
+    return length * width
+
+def area_circle(radius):
+    return math.pi * radius ** 2
+
+def area_triangle(base, height):
+    return 0.5 * base * height
+
+def is_square(side1, side2, side3, side4):
+    return side1 == side2 == side3 == side4
+
+
+#decor.py
+
+def print_function_name(func):
+    def wrapper(*args, **kwargs):
+        print("Calling function:", func.__name__)
+        return func(*args, **kwargs)
+    return wrapper
+
+#main.py
+
+from geometric import area_square, area_rectangle, area_circle, area_triangle, is_square
+from decor import print_function_name
+
+@print_function_name
+def calculate_area():
+    print("Area of square:", area_square(5))
+    print("Area of rectangle:", area_rectangle(3, 4))
+    print("Area of circle:", area_circle(2))
+    print("Area of triangle:", area_triangle(5, 2))
+    print("Is square?", is_square(4, 4, 4, 4))
+
+calculate_area()
+
+
+========================================================================================
+#Write a function to return an integer, write one decorator to
+increment the value by returned by function, write another
+decorator to multiply the value by 2. Print the results, then
+change the order of decorator applied and print the result.
+
+def my_function():
+    return 5
+
+def increment_decorator(func):
+    def wrapper():
+        return func() + 1
+    return wrapper
+
+def multiply_decorator(func):
+    def wrapper():
+        return func() * 2
+    return wrapper
+
+decorated_function = increment_decorator(multiply_decorator(my_function))
+print(decorated_function())
+
+decorated_function = multiply_decorator(increment_decorator(my_function))
+print(decorated_function()) 
+
+

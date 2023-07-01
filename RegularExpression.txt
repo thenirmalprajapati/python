@@ -1,0 +1,369 @@
+#Regular
+
+import re
+
+def retrieve_words_starting_with_a(text):
+    pattern = r'\ba\w+\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "Apple is a fruit, and I like to eat an apple every day."
+result = retrieve_words_starting_with_a(text)
+print(result)
+
+
+------
+
+A python program to create a regular expression to retrieve all words starting with a numeric digit.
+
+import re
+
+def retrieve_words_starting_with_digit(text):
+    pattern = r'\b\d+\w*\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "I have 2 apples and 3 oranges."
+result = retrieve_words_starting_with_digit(text)
+print(result)
+
+-----------
+3. A python program to create a regular expression to retrieve all words having 5 characters length.
+
+import re
+
+def retrieve_words_with_5_characters(text):
+    pattern = r'\b\w{5}\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "Python is a great programming language."
+result = retrieve_words_with_5_characters(text)
+print(result)
+
+
+4. A python program to create a regular expression to retrieve all words having 5 characters length using search().
+
+import re
+
+def retrieve_words_with_5_characters_search(text):
+    pattern = r'\b\w{5}\b'
+    match = re.search(pattern, text)
+    if match:
+        return match.group()
+    else:
+        return None
+
+text = "Python is a great programming language."
+result = retrieve_words_with_5_characters_search(text)
+print(result)
+
+
+5. A python program to create a regular expression to retrieve all words having length of at least 4 characters.
+
+import re
+
+def retrieve_words_with_at_least_4_characters(text):
+    pattern = r'\b\w{4,}\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "The quick brown fox jumps over the lazy dog."
+result = retrieve_words_with_at_least_4_characters(text)
+print(result)
+
+
+6. A python program to create a regular expression to retrieve all words having length of 3 or 4 or 5 characters.
+
+import re
+
+def retrieve_words_with_3_4_5_characters(text):
+    pattern = r'\b\w{3,5}\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "Python is a great programming language."
+result = retrieve_words_with_3_4_5_characters(text)
+print(result)
+
+7. A python program to create a regular expression to retrieve only single digits from a string.
+
+import re
+
+def retrieve_single_digits(text):
+    pattern = r'\b\d\b'
+    digits = re.findall(pattern, text)
+    return digits
+
+text = "The number 5 is less than 10."
+result = retrieve_single_digits(text)
+print(result)
+
+
+8. A python program to create a regular expression to retrieve the last word of a string, if it starts with t.
+
+import re
+
+def retrieve_last_word_starting_with_t(text):
+    pattern = r'\b[tT]\w+\b'
+    words = re.findall(pattern, text)
+    if words:
+        return words[-1]  # Return the last word matching the pattern
+    else:
+        return None
+
+text = "The cat sat on the mat."
+result = retrieve_last_word_starting_with_t(text)
+print(result)
+
+text = "I have an apple."
+result = retrieve_last_word_starting_with_t(text)
+print(result)
+
+
+
+
+9. A python program to create a regular expression to retrieve the phone number of a person from string.
+
+import re
+
+def retrieve_phone_number(text):
+    pattern = r'\b\d{10}\b'
+    phone_numbers = re.findall(pattern, text)
+    return phone_numbers
+
+text = "My phone number is 1234567890. Please contact me."
+result = retrieve_phone_number(text)
+print(result)
+
+
+
+10. A python program to create a regular expression to retrieve only name but not the phone number of a person from string.
+
+import re
+
+def retrieve_name_without_phone_number(text):
+    pattern = r'\b[A-Za-z]+\b(?!\s*\d{3}-\d{3}-\d{4})'
+    names = re.findall(pattern, text)
+    return names
+
+text = "My name is Nirmal and my phone number is 123-456-7890."
+result = retrieve_name_without_phone_number(text)
+print(result)
+
+
+11. A python program to create a regular expression to retrieve birth date from a string.
+
+import re
+
+def retrieve_birth_date(text):
+    pattern = r'\b\d{2}/\d{2}/\d{4}\b'
+    dates = re.findall(pattern, text)
+    return dates
+
+text = "My birth date is 16/03/2001."
+result = retrieve_birth_date(text)
+print(result)
+
+
+12. A python program to create a regular expression to search whether a given string is starting with ‘He’ or not.
+
+import re
+
+def starts_with_he(text):
+    pattern = r'^He'
+    match = re.search(pattern, text)
+    if match:
+        return True
+    else:
+        return False
+
+text = "Hello, how are you?"
+result = starts_with_he(text)
+print(result)
+
+text = "They are happy."
+result = starts_with_he(text)
+print(result)
+
+
+13. A python program to create a regular expression to search for a word at the ending of a string.
+
+import re
+
+def search_word_at_end(text, word):
+    pattern = r'\b' + re.escape(word) + r'\b'
+    match = re.search(pattern, text)
+    if match:
+        return True
+    else:
+        return False
+
+text = "I like apples."
+word = "apples"
+result = search_word_at_end(text, word)
+print(result)
+
+
+14. A python program to create a regular expression to search for a word at the ending of a string by ignoring the case.
+
+import re
+
+def search_word_at_end_ignore_case(text, word):
+    pattern = r'\b' + re.escape(word) + r'\b'
+    match = re.search(pattern, text, re.IGNORECASE)
+    if match:
+        return True
+    else:
+        return False
+
+text = "I like apples."
+word = "apples"
+result = search_word_at_end_ignore_case(text, word)
+print(result)
+
+text = "I like oranges."
+word = "APPLES"
+result = search_word_at_end_ignore_case(text, word)
+print(result)
+
+
+15. A python program to create a regular expression to retrieve marks and names from a given string.
+
+import re
+
+def retrieve_marks_and_names(text):
+    pattern = r'(\d+) marks for (\w+)'
+    matches = re.findall(pattern, text)
+    return matches
+
+text = "Rutika scored 80 marks for Math. Alice scored 90 marks for Science."
+result = retrieve_marks_and_names(text)
+print(result)
+
+
+16. A python program to create a regular expression to retrieve the timing s either ‘am’ or ‘pm’.
+
+import re
+
+def retrieve_timings(text):
+    pattern = r'\b\d{1,2}:\d{2}\s*[AP]M\b'
+    timings = re.findall(pattern, text, re.IGNORECASE)
+    return timings
+
+text = "The meeting is scheduled for 10:30 AM. Please be on time."
+result = retrieve_timings(text)
+print(result)
+
+text = "The event starts at 2:00 pm."
+result = retrieve_timings(text)
+print(result)
+
+
+17. A python program to create a regular expression to find all words starting with ’an’ or ’ak’ .
+
+import re
+
+def find_words_starting_with_an_or_ak(text):
+    pattern = r'\b(?:an|ak)\w+\b'
+    words = re.findall(pattern, text, re.IGNORECASE)
+    return words
+
+text = "She has an apple and an orange. Akash bought an akita dog."
+result = find_words_starting_with_an_or_ak(text)
+print(result)
+
+text = "The answer is not always straightforward."
+result = find_words_starting_with_an_or_ak(text)
+print(result)
+
+
+
+---------------
+
+#Using regular expressions display the last word of a string if it starts with ‘P’.
+import re
+
+def get_last_word_starting_with_p(string):
+    pattern = r'\bP\w*\b'
+    matches = re.findall(pattern, string)
+    if matches:
+        last_word = matches[-1]
+        return last_word
+    else:
+        return None
+
+text = "This is a sample string. Python programming language is powerful."
+last_word = get_last_word_starting_with_p(text)
+if last_word:
+    print("Last word starting with 'P':", last_word)
+else:
+    print("No word starting with 'P' found.")
+
+-------------------
+
+#Extract Email Addresses from a String:
+
+import re
+
+def extract_email_addresses(string):
+    pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
+    email_addresses = re.findall(pattern, string)
+    return email_addresses
+
+# Example usage
+text = "Contact us at info@example.com or support@example.org"
+email_list = extract_email_addresses(text)
+print("Email Addresses:")
+for email in email_list:
+    print(email)
+
+
+------------------
+
+#Validate a Phone Number:
+import re
+
+def validate_phone_number(phone_number):
+    pattern = r'^\d{3}-\d{3}-\d{4}$'
+    if re.match(pattern, phone_number):
+        return True
+    else:
+        return False
+
+phone = "123-456-7890"
+if validate_phone_number(phone):
+    print("Valid phone number.")
+else:
+    print("Invalid phone number.")
+
+---------------
+#Remove Extra Whitespaces from a String:
+import re
+
+def remove_extra_whitespaces(string):
+    pattern = r'\s+'
+    modified_string = re.sub(pattern, ' ', string)
+    return modified_string
+
+# Example usage
+text = "   This     is   a   string   with   extra   spaces.   "
+cleaned_text = remove_extra_whitespaces(text)
+print("Cleaned Text:", cleaned_text)
+
+
+-------------
+#Find All Dates in a String:
+import re
+
+def find_dates(string):
+    pattern = r'\b\d{1,2}/\d{1,2}/\d{4}\b'
+    dates = re.findall(pattern, string)
+    return dates
+
+
+text = "The event will take place on 10/25/2022 and 11/01/2022"
+date_list = find_dates(text)
+print("Dates:")
+for date in date_list:
+    print(date)

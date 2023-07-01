@@ -1,0 +1,287 @@
+#Write a function to add, subtract, multiply and divide two numbers using function and return the result in list.
+
+def perform_operations(num1, num2):
+    add_result = num1 + num2
+    subtract_result = num1 - num2
+    multiply_result = num1 * num2
+    divide_result = num1 / num2
+    
+    results = [add_result, subtract_result, multiply_result, divide_result]
+    return results
+
+num1 = float(input("Enter the first number: "))
+num2 = float(input("Enter the second number: "))
+
+result_list = perform_operations(num1, num2)
+
+print("The results of the arithmetic operations on", num1, "and", num2, "are:")
+print("Sum:", result_list[0])
+print("Difference:", result_list[1])
+print("Product:", result_list[2])
+print("Quotient:", result_list[3])
+
+
+=================================================================================================================
+
+#Write a function to find even numbers and return a list.
+
+def find_even_numbers(num_list):
+    even_numbers = []
+    for num in num_list:
+        if num % 2 == 0:
+            even_numbers.append(num)
+    return even_numbers
+list = [12,2,3,4,4,5,5,6,6]
+print(find_even_numbers(list))
+
+
+=================================================================================================================
+
+#Write a function to find odd numbers and return a list.
+
+def find_even_numbers(num_list):
+    even_numbers = []
+    for num in num_list:
+        if num % 2 != 0:
+            even_numbers.append(num)
+    return even_numbers
+list = [12,2,3,4,4,5,5,6,6]
+print(find_even_numbers(list))
+
+================================================================================================================
+
+#Write a function to find prime numbers	and return a list.
+
+def find_prime_numbers(num_list):
+    prime_numbers = []
+    for num in num_list:
+        if num > 1:
+            for i in range(2, num):
+                if num % i == 0:
+                    break
+            else:
+                prime_numbers.append(num)
+    return prime_numbers
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+prime_numbers = find_prime_numbers(numbers)
+print(prime_numbers) 
+
+=================================================================================================================
+
+#Write a Python function to multiply all the numbers in	a list.(Numbers can be	negative, positive or zero).
+list  = [1,2,3,-5,2,5]
+
+def multiplylist(list):
+	
+  result = 1
+  for i in list:
+        result = result * i
+  return result
+
+
+print(multiplylist(list))
+
+================================================================================================================
+
+#Write a Python function to calculate the factorial of	a number.The function accepts the number as an argument.
+
+
+def fact(num):
+	fact =1
+	for i in range(1,num + 1):
+		fact = fact*i
+	print("The factorial of",num,"is",fact)
+
+fact(5)
+
+================================================================================================================
+
+#Write a python function that takes list and returns a new list with distinct elements from a list
+
+list  = [44,55,55,33,22,22]
+
+def checklist(list):
+  num = []
+  for i in list:
+    if i not in num:
+      num.append(i)
+  return num
+
+print('Distinct values are')
+print(checklist(list))
+
+================================================================================================================
+
+#Write a python function to find the largest item from a given list.
+
+list = []
+
+num= int(input('Enter the size of list'))
+
+for n in range(num):
+    number = int(input('Enter number: '))
+    list.append(number)
+
+def checklarge(list):
+	
+	print("Largest element is:", max(list))
+
+checklarge(list) 
+
+===============================================================================================================
+
+#Write a function to add up all the numbers in a list.
+
+list = []
+n = int(input("Enter number of elements:"))
+
+for i in range(0,n):
+	ele = int(input())
+	list.append(ele)
+print('Current List Values')
+print(list)
+
+
+def sum(list):
+    total = 0
+    for x in list:
+        total += x
+    return total
+print('Addition of list values:=',sum(list))
+
+================================================================================================================
+
+#Write a function takes a list of strings and returns a new list that contains capitalized strings.
+
+def capitalize_strings():
+    lst = input("Enter a list of strings separated by spaces: ").split()
+    return [s.capitalize() for s in lst]
+
+print(capitalize_strings())
+
+================================================================================================================
+
+#Write a function called middle that takes a list and returns a new list that contains all but the first and last elements should be removed. So middle([1,2,3,4]) should return [2,3].
+
+def middle():
+    lst = input("Enter a list of integers separated by spaces: ").split()
+    return [int(x) for x in lst[1:-1]]
+
+print(middle())
+
+================================================================================================================
+
+#Write a function which breaks a string into individual letters.
+
+def string_to_letters():
+    s = input("Enter a string: ")
+    return list(s)
+
+
+print(string_to_letters())
+
+================================================================================================================
+
+#Write a function which takes a list of strings and concatenates the elements
+
+def concatenate_strings():
+    lst = input("Enter a list of strings separated by spaces: ").split()
+    return ''.join(lst)
+
+
+print(concatenate_strings())
+
+================================================================================================================
+
+#Write a function that takes a list and returns a new list with distinct elements from the first list
+
+list = []
+n = int(input("Enter number of elements : "))
+
+for i in range(0, n):
+	print("Enter {0} Element".format(i+1))
+	ele = int(input())
+	list.append(ele)
+print('Current List Values')
+print(list)
+
+
+def checklist(list):
+  num = []
+  for a in list:
+    if a not in num:
+      num.append(a)
+
+  return num
+
+print('Distinct Values from List')
+print(checklist(list))
+
+================================================================================================================
+
+#Using List Comprehension to Iterate through a String.
+
+lst = [ letter for letter in 'Nirmal' ]
+
+print(lst)
+
+================================================================================================================
+
+#Please check in the range from 0 – 9 if the item’s value is divisible by 2.
+
+number_list = [ x for x in range(0,9) if x % 2 == 0]
+print(number_list)
+
+===============================================================================================================
+
+#Check the five numbers from 0 to 9. If y is divisible by 2, then even is appended to the obj list.
+If not, odd is appended.
+
+obj = ["Even" if i%2==0 else "Odd" for i in range(0,9)]
+print(obj)
+
+===============================================================================================================
+
+#Finding the elements in a list in which elements are ended with the letter ‘b’ and the length of
+that element is greater than 2.
+
+names = ['Nirmal','Bob']
+final_names = [name for name in names if name.lower().endswith('b') and len(name) > 2]
+print(final_names);	
+
+
+===============================================================================================================
+
+
+#Add two list X & Y and display the result.
+
+X = [1, 2, 3]
+Y = [4, 5, 6]
+
+result = [X[i] + Y[i] for i in range(len(X))]
+
+print(result)
+
+
+================================================================================================================
+
+#Lets take two list L1 & L2 with numbers and create another list L3 with numbers present in L1 but
+not in L2.
+
+L1 = [1, 2, 3, 4, 5]
+L2 = [3, 5, 7, 9]
+L3 = [x for x in L1 if x not in L2]
+
+
+print(L3)
+
+===============================================================================================================
+
+
+
+
+
+
+
+

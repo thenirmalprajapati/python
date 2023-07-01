@@ -1,0 +1,312 @@
+#Write a Python program that reads a file specified by the user and calculates the following statistics: the number of lines, the number of words, and the number of characters in the file. If the file does not exist, display an appropriate error message.
+
+import os
+import sys
+
+fname = input('Enter filename: ')
+
+if os.path.isfile(fname):
+    try:
+        f = open(fname, 'r')
+    except IOError:
+        print('Error: Unable to open the file', fname)
+        sys.exit(1)
+else:
+    print(fname + ' does not exist')
+    sys.exit(1)
+
+cl = cw = cc = 0
+for line in f:
+    words = line.split()
+    cl += 1
+    cw += len(words)
+    cc += len(line)
+
+print('No. of lines: ', cl)
+print('No. of words: ', cw)
+print('No. of characters: ', cc)
+
+f.close()
+
+
+--------------------------
+#Consider a student object; write a student class with attributes id, name,marks1, marks2 and marks3 and methods display and calculate_Percentage. Define constructor. Use pickle to dump and load the object student in and from a binary file.
+
+
+Student.py
+class Student:
+    def __init__(self, student_id, name, marks1, marks2, marks3):
+        self.id = student_id
+        self.name = name
+        self.marks1 = marks1
+        self.marks2 = marks2
+        self.marks3 = marks3
+
+    def display(self):
+        print("Student ID:", self.id)
+        print("Name:", self.name)
+        print("Marks 1:", self.marks1)
+        print("Marks 2:", self.marks2)
+        print("Marks 3:", self.marks3)
+
+    def calculate_percentage(self):
+        total_marks = self.marks1 + self.marks2 + self.marks3
+        percentage = (total_marks / 300) * 100
+        return percentage
+
+main.py
+import pickle
+from student import Student
+
+student = Student(1, "nirmal", 80, 75, 90)
+
+with open("student.bin", "wb") as file:
+    pickle.dump(student, file)
+
+with open("student.bin", "rb") as file:
+    student = pickle.load(file)
+
+student.display()
+
+percentage = student.calculate_percentage()
+print("Percentage:", percentage)
+-------------------------
+
+Emp.py
+class Emp:
+    def __init__(self, id, name, salary):
+        self.id = id
+        self.name = name
+        self.salary = salary
+
+    def display(self):
+        print("{:5d} {:20s} {:10.2f}".format(self.id, self.name, self.salary))
+
+
+mypickle.py
+import pickle
+from Emp import Emp
+
+f = open('emp.dat', 'wb')
+n = int(input('How many employees: '))
+
+for i in range(n):
+    id = int(input('Enter id: '))
+    name = input('Enter name: ')
+    salary = float(input('Enter salary: '))
+    e = Emp(id, name, salary)
+    pickle.dump(e, f)
+
+f.close()
+
+
+readpickle.py
+import pickle as p
+from Emp import Emp
+
+f = open('emp.dat', 'rb')
+print('Employees details are as:')
+print("Id\tName\t\tSalary")
+
+while True:
+    try:
+        obj = p.load(f)
+        obj.display()
+    except EOFError:
+        print('End of file reached.....')
+        break
+
+f.close()
+
+-----------------------------------
+# A program to create binary file and store records, serach,update
+
+data.py
+RecordLength = 20
+with open("Cities.bin", "wb") as f:
+    n = int(input('Enter no. of cities: '))
+    for i in range(n):
+        city = input('Enter City name: ')
+        ln = len(city)
+        print(ln)
+        
+        # Increase the city name to 20 characters by adding remaining spaces
+        city = city + (RecordLength - ln) * ' '
+        length = len(city)
+        print(length)
+        
+        city = city.encode()
+        f.write(city)
+
+access.py
+reclen = 20
+with open('Cities.bin', 'rb') as f:
+    n = int(input('Enter record number: '))
+    f.seek(reclen * (n - 1))
+    data = f.read(reclen)
+    print(data.decode())
+
+search.py
+import os
+
+reclen = 20
+size = os.path.getsize('cities.bin')
+print('Size of file = {} bytes'.format(size))
+n = int(size / reclen)
+print('No. of records = {}'.format(n))
+
+with open('cities.bin', 'rb') as f:
+    name = input('Enter city name: ')
+    name = name.encode()
+    position = 0
+    found = False
+
+    for i in range(n):
+        f.seek(position)
+        data = f.read(reclen)
+        if name in data:
+            print('City found at record no:', (i + 1))
+            found = True
+        position += reclen
+
+    if not found:
+        print('City not found')
+
+
+update.py
+import os
+
+reclen = 20
+size = os.path.getsize('cities.bin')
+print('Size of file = {} bytes'.format(size))
+n = int(size / reclen)
+print('No. of records = {}'.format(n))
+
+with open('cities.bin', 'r+b') as f:
+    name = input('Enter city name: ')
+    name = name.encode()
+    newname = input('Enter new name: ')
+    ln = len(newname)
+    newname = newname + (20 - ln) * ' '
+    newname = newname.encode()
+    position = 0
+    found = False
+
+    for i in range(n):
+        f.seek(position)
+        data = f.read(reclen)
+
+        if name in data:
+            print('Updated record no:', (i + 1))
+            found = True
+            f.seek(-reclen, 1)
+            f.write(newname)
+
+        position += reclen
+
+    if not found:
+        print('City not found')
+
+
+delete.py
+import os
+
+reclen = 100
+size = os.path.getsize('cities.bin')
+print('Size of file = {} bytes'.format(size))
+n = int(size / reclen)
+print('No. of records = {}'.format(n))
+
+f1 = open('cities.bin', 'rb')
+f2 = open('citiesNew.bin', 'wb')
+
+city = input('Enter city name to delete: ')
+ln = len(city)
+city = city + (reclen - ln) * ' '
+city = city.encode()
+
+for i in range(n):
+    data = f1.read(reclen)
+    if data != city:
+        f2.write(data)
+        print('Record deleted.....')
+
+f1.close()
+f2.close()
+
+os.remove('cities.bin')
+os.rename('citiesNew.bin', 'cities.bin')
+
+
+------------------------------
+
+#Program to create a phone book with names and phone numbers
+
+store.py
+with open("Phonebook.dat", "wb") as f:
+    n = int(input('How many entries? '))
+    for i in range(n):
+        name = input('Enter name: ')
+        phone = input('Enter phone no: ')
+        name = name.encode()
+        phone = phone.encode()
+        f.write(name + phone)
+
+
+main.py
+import mmap
+import sys
+
+print('1. To display all the entries')
+print('2. To display Phone numbers')
+print('3. Modify an entry')
+print('4. Exit')
+
+ch = input('Your Choice: ')
+
+if ch == '4':
+    sys.exit()
+
+with open("phonebook.dat", "r+b") as f:
+    mm = mmap.mmap(f.fileno(), 0)
+
+    if ch == '1':
+        print(mm.read().decode())
+    
+    if ch == '2':
+        name = input('Enter name: ')
+        n = mm.find(name.encode())
+        n1 = n + len(name)
+        ph = mm[n1: n1+10]
+        print('Phone no:', ph.decode())
+    
+    if ch == '3':
+        name = input('Enter name: ')
+        n = mm.find(name.encode())
+        n1 = n + len(name)
+        ph1 = input('Enter new phone number: ')
+        mm[n1: n1+10] = ph1.encode()
+
+    mm.close()
+
+
+-----------------------------
+
+#Write a Python program that reads a text file named "data.txt" and counts the frequency of each word in the file. Display the word frequency in descending order.
+
+from collections import Counter
+
+with open("data.txt", "r") as file:
+    text = file.read()
+
+text = text.lower()
+text = text.replace(".", "").replace(",", "").replace("?", "").replace("!", "")
+
+words = text.split()
+
+word_freq = Counter(words)
+
+sorted_word_freq = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
+
+for word, freq in sorted_word_freq:
+    print(f"{word}: {freq}")

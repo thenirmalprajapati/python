@@ -1,0 +1,192 @@
+#DataScienceCSV
+
+import pandas as pd
+
+df = pd.read_excel("Data.xlsx", "111")
+df
+
+import pandas as pd
+
+df = pd.read_csv("indian_foodPrice.csv")
+df
+
+
+import pandas as pd
+
+empdata = {"empid": [1001, 1002, 1003, 1004, 1005, 1006,1007,1008],
+"ename": ["Kaushika","Jitendra","Munmun","Gungun","Ram","Shyam","Sa
+m","Peter"],
+"Phn. No": [7842798249,7842798300,7842798351,7842798402,7842798453,7
+842798504,7842798555,7842798606],
+"City": ["Surat","Lucknow","Balia","Mumbai","Banaras","Gorakhpur","N
+ew Zealand","London"],
+}
+df = pd.DataFrame(empdata)
+df
+
+
+import pandas as pd
+
+EmpList = [(1,"Kaushika","Surat"),(2,"Jitendra","Surat"), (3,"Munmun","Bali
+a")]
+df1 = pd.DataFrame(EmpList)
+df1
+
+
+import pandas as pd
+
+df = pd.read_csv("indian_foodPrice.csv")
+df
+
+
+----
+df.shape
+----
+r,c = df.shape
+
+print("Number of rows:" ,r)
+print("Number if columns:",c)
+----
+df.head()
+----
+df.head(10)
+----
+df.tail()
+----
+df.tail(3)
+----
+df[2:5]
+----
+# to display the rows in reverse order, we can use negative step size in slici
+
+ng
+df[5:0:-1]
+-----
+df.columns
+--
+# To retrieve Column Data
+
+df.name
+----
+df[['name', 'Price']]
+---
+df['Price'].max()
+---
+df['Price'].min()
+--
+df.describe()
+--
+df[df.Price>500]
+--
+dff = df[df.Price < 150]
+
+dff.shape
+---
+df[df.Price == 150]
+---
+df[df.Price == df.Price.min()]
+---
+df[['name']][df.Price<150]
+---
+df.index
+---
+df11= df.set_index('Price')
+df11
+---
+DFEmp.set_index('Id',inplace=True)
+---
+DFEmp.loc[1001]
+---
+DFEmp.loc[1010]
+---
+#Resetting the Index
+
+DFEmp.reset_index(inplace=True)
+---
+# Sorting the Data
+import pandas as pd
+DFEmp = pd.read_csv("Emp.csv")
+DFEmp
+SortedEmp = DFEmp.sort_values('DOJ')
+SortedEmp
+---
+SortedEmp = DFEmp.sort_values('DOJ', ascending=False)
+SortedEmp
+import pandas as pd
+
+TempEmp = pd.read_csv("Emp.csv")
+TempEmp
+
+--
+df1 = TempEmp.fillna(0)
+df1
+
+--
+df1 = TempEmp.fillna({'name': 'Xyz', 'Id': 1021, 'DOJ': '2001/02/20'})
+df1
+---
+df2 =TempEmp.dropna()
+---
+
+#DataScience
+
+#bar
+import matplotlib.pyplot as plt
+
+import pandas as pd
+Emp = pd.read_csv("EmployeeSales.csv")
+Emp
+
+x = Emp['Id']
+y = Emp['Salary']
+plt.xlabel('Employee ids')
+plt.ylabel('Employee Salary')
+plt.title('Comparision of Employee Salaries')
+plt.bar(x, y, label='Employee data',width=0.9,color='red')
+plt.show()
+
+
+plt.barh(x, y, label='Employee data', color='blue')
+
+-----
+
+import matplotlib.pyplot as plt
+
+import pandas as pd
+EmpP = pd.read_csv("EmployeeProduction.csv")
+EmpP
+
+----
+
+x1 = EmpP['Id']
+y1 = EmpP['Salary']
+plt.bar(x, y, label='Sales Department', color='blue')
+plt.bar(x1, y1, label='Production Department', color='red')
+
+---
+age = EmpP['Age']
+
+age
+bins = [20,25,30,35,40,45]
+plt.hist(age, bins, histtype='bar', rwidth=0.6, color='gold')
+
+plt.xlabel('Employee Ages')
+plt.ylabel('No. of Employees')
+plt.title('Ages Catagories')
+----
+
+plt.hist(age, bins, histtype='step', rwidth=0.1, color='gold')
+
+plt.xlabel('Employee Ages')
+plt.ylabel('No. of Employees')
+plt.title('Ages Catagories')
+
+----
+import matplotlib.pyplot as plt
+
+slices = [40,30,20,10]
+depts = ['Sales','Production','HR','Finance']
+cols = ['magenta','yellow','brown','blue']
+plt.pie(slices,labels=depts,colors=cols, startangle=90, explode=(0.2,0.2,0.2,
+0.2), shadow=False, autopct='%.1f%%')
+plt.title('Department Strength')

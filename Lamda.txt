@@ -1,0 +1,80 @@
+#Write lambda function to find maximum value from two numbers
+
+maximum = lambda a, b: a if a > b else b
+
+result = maximum(5, 10)
+print(result) 
+
+==================================================================
+
+#Write a lambda	function to find modulo	of given number
+
+mod = lambda x, y: x % y
+
+result = mod(12,5)
+print(result) 
+
+==================================================================
+#Use filter to find odd values from a list. Use lambda function to
+write function.
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+odd_numbers = list(filter(lambda x: x % 2 != 0, numbers))
+
+print(odd_numbers)
+
+=================================================================
+#Use filter function to find values greater than 10 and less than
+500 function.
+values = [2, 15, 87, 200, 550, 13, 450, 1, 600]
+
+filtered_values = list(filter(lambda x: x > 10 and x < 500, values))
+
+print(filtered_values)
+
+
+==================================================================
+
+#Use map to find square for each values of the list. Use lambda
+function to write function.
+
+numbers = [1, 2, 3, 4, 5]
+
+squares = list(map(lambda x: x ** 2, numbers))
+
+print(squares)
+
+===================================================================
+
+#Use filter function to extract vowels from given list of
+alphabets.
+
+alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+
+vowels = list(filter(lambda x: x in ['a', 'e', 'i', 'o', 'u'], alphabets))
+
+print(vowels)
+
+====================================================================
+
+#Use map function to increase salary by 25% of all employees.
+
+employees = [{'name': 'Nirmal', 'salary': 50000},
+             {'name': 'Abhi', 'salary': 75000},
+             {'name': 'Mayur', 'salary': 10000},
+	     {'name': 'Him', 'salary': 15000}]
+
+new_salaries = list(map(lambda emp: {'name': emp['name'], 'salary': emp['salary']*1.25}, employees))
+
+print(new_salaries) 
+
+====================================================================
+#Write a Python program to convert all the characters into
+uppercase. Use map.
+
+string = "Nirmal Prajapati"
+
+upper_string = ''.join(map(str.upper, string))
+
+print(upper_string) 

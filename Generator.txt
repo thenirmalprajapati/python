@@ -1,0 +1,27 @@
+#Write a generator to returns a sequence in given range (Hint. values between x	and y say 5 and	10)
+
+def sequence_generator(start, end):
+    for num in range(start, end+1):
+        yield num
+
+for num in sequence_generator(5, 10):
+    print(num)
+
+
+======================================================================================================
+
+#Write generator to returns a sequence in given	range (Hint. values between x and y say	10 and	1).
+
+def range_sequence(x, y):
+    if x < y:
+        x, y = y, x
+    for i in range(x, y-1, -1):
+        yield i 
+
+for num in range_sequence(10, 1):
+    print(num)
+
+
+========================================================================================================
+
+

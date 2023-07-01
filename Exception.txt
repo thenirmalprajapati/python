@@ -1,0 +1,105 @@
+#10_1
+
+class UserNotFoundException(Exception):
+    pass
+
+user_cities = {
+    "Nirmal": "Surat",
+    "Him": "Navsari",
+    "Abhi": "Ahemdabad"
+}
+
+try:
+    name = input("Enter name to find their city: ")
+    
+    if name in user_cities:
+        city = user_cities[name]
+        print(f"{name}'s city is {city}")
+    else:
+        raise UserNotFoundException("User not found!")
+        
+except UserNotFoundException as error:
+    print("Oops! UserNotFoundException occurred:", error)
+
+
+=================================================================================
+
+#10_2
+
+class TooSmallValue(Exception):
+    pass
+
+class TooLargeValue(Exception):
+    pass
+
+n = int(input("Enter a specific number: "))
+
+while True:
+    try:
+        value = int(input("Enter a value: "))
+        
+        if value < n:
+            raise TooSmallValue("Entered value is too small!")
+        elif value > n:
+            raise TooLargeValue("Entered value is too large!")
+            
+        else:
+            print("Congratulations, you entered the correct value!")
+            break
+            
+    except TooSmallValue as error:
+        print("Oops! TooSmallValue occurred:", error)
+        
+    except TooLargeValue as error:
+        print("Oops! TooLargeValue occurred:", error)
+====================================================================================
+
+#10_3
+
+class NotSuitableValueException(Exception):
+    pass
+
+def check_positive_digit(value):
+    try:
+        if not value.isdigit():
+            raise NotSuitableValueException("Invalid input. Please enter a positive digit.")
+        elif int(value) <= 0:
+            raise NotSuitableValueException("Invalid input. Please enter a positive digit.")
+        else:
+            print("Valid input. You entered a positive digit.")
+    except NotSuitableValueException as e:
+        print(str(e))
+
+value = input("Enter a positive digit: ")
+check_positive_digit(value)
+
+===================================================================================
+
+#10_4
+
+class LowBalanceException(Exception):
+    pass
+
+account_data = {
+    "Nirmal": 5000,
+    "Him": 2500,
+    "Abhi": 1000
+}
+
+def check_balance(username):
+    try:
+        if account_data[username] < 2000:
+            raise LowBalanceException(f"Low balance: {account_data[username]} INR. Minimum balance required is 2000 INR.")
+        else:
+            print(f"Current balance for {username}: {account_data[username]} INR.")
+    except KeyError:
+        print(f"Error: {username} is not a valid user.")
+
+check_balance("Nirmal")  
+check_balance("Him")  
+check_balance("Abhi")   
+check_balance("Mayur") 
+
+
+=========================================================================================
+

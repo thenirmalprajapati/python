@@ -1,0 +1,138 @@
+#Write a python program to create a dictionary with the employee details and retrieve the value upon giving the keys.
+
+employee = {
+    "id": "1234",
+    "name": "Nirmal Prajapati",
+    "department": "IT",
+    "salary": 50000
+}
+
+key = "name"
+value = employee.get(key)
+
+print(f"The value for key '{key}' is '{value}'")
+
+======================================================================================================================
+
+#Write a python program to retrieve keys, values and key-value pair from a dictionary.
+
+sample_dict = {"apple": 2, "banana": 5, "orange": 1, "pear": 3}
+
+keys = sample_dict.keys()
+print("Keys:", keys)
+
+values = sample_dict.values()
+print("Values:", values)
+
+items = sample_dict.items()
+print("Key-value pairs:", items)
+
+
+=======================================================================================================================
+
+#Write a python program to create a dictionary and find the sum of values.(Use eval & sinput method).
+
+
+dict_str = input("Enter dictionary as string: ")
+
+dictionary = eval(dict_str)
+
+sum_values = sum(dictionary.values())
+
+print("Sum of values:", sum_values)
+
+=======================================================================================================================
+
+#Write a python program to create a dictionary from keyboard and display the elements.
+
+print("Enter key-value pairs (separated by a space), or type 'done' to finish:")
+
+my_dict = {}
+
+while True:
+    input_str = input("> ")
+    if input_str == "done":
+        break
+    key, value = input_str.split()
+    value = int(value)
+    my_dict[key] = value
+
+print("Dictionary contents:")
+for key, value in my_dict.items():
+    print(key, "->", value)
+=====================================================================================================================
+
+# create a dictionary with cricket player's names and scores in a match
+
+cricket_scores = {
+    "Sachin": 78,
+    "Virat": 120,
+    "Rohit": 64,
+    "Dhoni": 45,
+    "Rahul": 89
+}
+
+player_name = input("Enter the player's name: ")
+if player_name in cricket_scores:
+    print(f"{player_name} scored {cricket_scores[player_name]} runs.")
+else:
+    print(f"{player_name} didn't play in this match.")
+=====================================================================================================================
+
+#Write a python program to show the usage of for loop to retrieve elements of dictionaries.
+
+student_scores = {
+    "Nirmal": 85,
+    "Him": 72,
+    "Abhi": 90,
+    "Mayur": 68,
+    "Abhay": 92
+}
+
+for key in student_scores:
+    value = student_scores[key]
+    print(f"{key} scored {value} marks.")
+
+=====================================================================================================================
+
+#Write a python program to find the number of occurrences of each letter in a string using dictionary.
+
+input_string = input("Enter a string: ")
+
+letter_counts = {}
+
+for char in input_string:
+    if char.isalpha():
+        lowercase_char = char.lower()
+        if lowercase_char in letter_counts:
+            letter_counts[lowercase_char] += 1
+        else:
+            letter_counts[lowercase_char] = 1
+
+for letter in letter_counts:
+    count = letter_counts[letter]
+    print(f"{letter}: {count}")
+
+=====================================================================================================================
+
+#Write a python program to sort the elements of a dictionary based on a key or values.(use lambda function)
+
+student_scores = {
+    "Nirmal": 85,
+    "Him": 72,
+    "Abhi": 90,
+    "Mayur": 68,
+    "Abhay": 92
+}
+
+sorted_by_keys = dict(sorted(student_scores.items(), key=lambda x: x[0]))
+
+print("Sorted by keys:")
+for key, value in sorted_by_keys.items():
+    print(f"{key}: {value}")
+
+sorted_by_values = dict(sorted(student_scores.items(), key=lambda x: x[1]))
+
+print("Sorted by values:")
+for key, value in sorted_by_values.items():
+    print(f"{key}: {value}")

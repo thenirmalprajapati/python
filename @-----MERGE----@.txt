@@ -1,0 +1,1676 @@
+#Write a Python program that reads a file specified by the user and calculates the following statistics: the number of lines, the number of words, and the number of characters in the file. If the file does not exist, display an appropriate error message.
+
+import os
+import sys
+
+fname = input('Enter filename: ')
+
+if os.path.isfile(fname):
+    try:
+        f = open(fname, 'r')
+    except IOError:
+        print('Error: Unable to open the file', fname)
+        sys.exit(1)
+else:
+    print(fname + ' does not exist')
+    sys.exit(1)
+
+cl = cw = cc = 0
+for line in f:
+    words = line.split()
+    cl += 1
+    cw += len(words)
+    cc += len(line)
+
+print('No. of lines: ', cl)
+print('No. of words: ', cw)
+print('No. of characters: ', cc)
+
+f.close()
+
+-------------------------
+
+#Consider a student object; write a student class with attributes id, name,marks1, marks2 and marks3 and methods display and calculate_Percentage. Define constructor. Use pickle to dump and load the object student in and from a binary file.
+
+
+Student.py
+class Student:
+    def __init__(self, student_id, name, marks1, marks2, marks3):
+        self.id = student_id
+        self.name = name
+        self.marks1 = marks1
+        self.marks2 = marks2
+        self.marks3 = marks3
+
+    def display(self):
+        print("Student ID:", self.id)
+        print("Name:", self.name)
+        print("Marks 1:", self.marks1)
+        print("Marks 2:", self.marks2)
+        print("Marks 3:", self.marks3)
+
+    def calculate_percentage(self):
+        total_marks = self.marks1 + self.marks2 + self.marks3
+        percentage = (total_marks / 300) * 100
+        return percentage
+
+main.py
+import pickle
+from student import Student
+
+student = Student(1, "nirmal", 80, 75, 90)
+
+with open("student.bin", "wb") as file:
+    pickle.dump(student, file)
+
+with open("student.bin", "rb") as file:
+    student = pickle.load(file)
+
+student.display()
+
+percentage = student.calculate_percentage()
+print("Percentage:", percentage)
+
+
+
+--------------------------
+
+Emp.py
+class Emp:
+    def __init__(self, id, name, salary):
+        self.id = id
+        self.name = name
+        self.salary = salary
+
+    def display(self):
+        print("{:5d} {:20s} {:10.2f}".format(self.id, self.name, self.salary))
+
+
+mypickle.py
+import pickle
+from Emp import Emp
+
+f = open('emp.dat', 'wb')
+n = int(input('How many employees: '))
+
+for i in range(n):
+    id = int(input('Enter id: '))
+    name = input('Enter name: ')
+    salary = float(input('Enter salary: '))
+    e = Emp(id, name, salary)
+    pickle.dump(e, f)
+
+f.close()
+
+
+readpickle.py
+import pickle as p
+from Emp import Emp
+
+f = open('emp.dat', 'rb')
+print('Employees details are as:')
+print("Id\tName\t\tSalary")
+
+while True:
+    try:
+        obj = p.load(f)
+        obj.display()
+    except EOFError:
+        print('End of file reached.....')
+        break
+
+f.close()
+
+-----------------------------------
+# A program to create binary file and store records, serach,update
+
+data.py
+RecordLength = 20
+with open("Cities.bin", "wb") as f:
+    n = int(input('Enter no. of cities: '))
+    for i in range(n):
+        city = input('Enter City name: ')
+        ln = len(city)
+        print(ln)
+        
+        # Increase the city name to 20 characters by adding remaining spaces
+        city = city + (RecordLength - ln) * ' '
+        length = len(city)
+        print(length)
+        
+        city = city.encode()
+        f.write(city)
+
+access.py
+reclen = 20
+with open('Cities.bin', 'rb') as f:
+    n = int(input('Enter record number: '))
+    f.seek(reclen * (n - 1))
+    data = f.read(reclen)
+    print(data.decode())
+
+search.py
+import os
+
+reclen = 20
+size = os.path.getsize('cities.bin')
+print('Size of file = {} bytes'.format(size))
+n = int(size / reclen)
+print('No. of records = {}'.format(n))
+
+with open('cities.bin', 'rb') as f:
+    name = input('Enter city name: ')
+    name = name.encode()
+    position = 0
+    found = False
+
+    for i in range(n):
+        f.seek(position)
+        data = f.read(reclen)
+        if name in data:
+            print('City found at record no:', (i + 1))
+            found = True
+        position += reclen
+
+    if not found:
+        print('City not found')
+
+
+update.py
+import os
+
+reclen = 20
+size = os.path.getsize('cities.bin')
+print('Size of file = {} bytes'.format(size))
+n = int(size / reclen)
+print('No. of records = {}'.format(n))
+
+with open('cities.bin', 'r+b') as f:
+    name = input('Enter city name: ')
+    name = name.encode()
+    newname = input('Enter new name: ')
+    ln = len(newname)
+    newname = newname + (20 - ln) * ' '
+    newname = newname.encode()
+    position = 0
+    found = False
+
+    for i in range(n):
+        f.seek(position)
+        data = f.read(reclen)
+
+        if name in data:
+            print('Updated record no:', (i + 1))
+            found = True
+            f.seek(-reclen, 1)
+            f.write(newname)
+
+        position += reclen
+
+    if not found:
+        print('City not found')
+
+
+delete.py
+import os
+
+reclen = 100
+size = os.path.getsize('cities.bin')
+print('Size of file = {} bytes'.format(size))
+n = int(size / reclen)
+print('No. of records = {}'.format(n))
+
+f1 = open('cities.bin', 'rb')
+f2 = open('citiesNew.bin', 'wb')
+
+city = input('Enter city name to delete: ')
+ln = len(city)
+city = city + (reclen - ln) * ' '
+city = city.encode()
+
+for i in range(n):
+    data = f1.read(reclen)
+    if data != city:
+        f2.write(data)
+        print('Record deleted.....')
+
+f1.close()
+f2.close()
+
+os.remove('cities.bin')
+os.rename('citiesNew.bin', 'cities.bin')
+
+
+------------------------------
+
+#Program to create a phone book with names and phone numbers
+
+store.py
+with open("Phonebook.dat", "wb") as f:
+    n = int(input('How many entries? '))
+    for i in range(n):
+        name = input('Enter name: ')
+        phone = input('Enter phone no: ')
+        name = name.encode()
+        phone = phone.encode()
+        f.write(name + phone)
+
+
+main.py
+import mmap
+import sys
+
+print('1. To display all the entries')
+print('2. To display Phone numbers')
+print('3. Modify an entry')
+print('4. Exit')
+
+ch = input('Your Choice: ')
+
+if ch == '4':
+    sys.exit()
+
+with open("phonebook.dat", "r+b") as f:
+    mm = mmap.mmap(f.fileno(), 0)
+
+    if ch == '1':
+        print(mm.read().decode())
+    
+    if ch == '2':
+        name = input('Enter name: ')
+        n = mm.find(name.encode())
+        n1 = n + len(name)
+        ph = mm[n1: n1+10]
+        print('Phone no:', ph.decode())
+    
+    if ch == '3':
+        name = input('Enter name: ')
+        n = mm.find(name.encode())
+        n1 = n + len(name)
+        ph1 = input('Enter new phone number: ')
+        mm[n1: n1+10] = ph1.encode()
+
+    mm.close()
+
+
+-----------------------------
+
+#Write a Python program that reads a text file named "data.txt" and counts the frequency of each word in the file. Display the word frequency in descending order.
+
+from collections import Counter
+
+with open("data.txt", "r") as file:
+    text = file.read()
+
+text = text.lower()
+text = text.replace(".", "").replace(",", "").replace("?", "").replace("!", "")
+
+words = text.split()
+
+word_freq = Counter(words)
+
+sorted_word_freq = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
+
+for word, freq in sorted_word_freq:
+    print(f"{word}: {freq}")
+
+
+-----------------------
+
+#odd
+
+def all_odd_digits_numbers(start, end):
+    result = []
+    for num in range(start, end + 1):
+        digits = [int(digit) for digit in str(num)]
+        if all(digit % 2 != 0 for digit in digits):
+            result.append(num)
+    return result
+
+numbers = all_odd_digits_numbers(50, 1000)
+
+for num in numbers:
+    print(num)
+
+
+
+-------------------
+
+#prime
+
+def is_prime(num):
+    if num < 2:
+        return False
+    for i in range(2, int(num ** 0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+def find_prime_numbers(start, end):
+    result = []
+    for num in range(start, end + 1):
+        if is_prime(num):
+            result.append(num)
+    return result
+
+primes = find_prime_numbers(100, 1000)
+
+for prime in primes:
+    print(prime)
+
+
+-------------------
+#Regular
+
+import re
+
+def retrieve_words_starting_with_a(text):
+    pattern = r'\ba\w+\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "Apple is a fruit, and I like to eat an apple every day."
+result = retrieve_words_starting_with_a(text)
+print(result)
+
+
+------
+
+A python program to create a regular expression to retrieve all words starting with a numeric digit.
+
+import re
+
+def retrieve_words_starting_with_digit(text):
+    pattern = r'\b\d+\w*\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "I have 2 apples and 3 oranges."
+result = retrieve_words_starting_with_digit(text)
+print(result)
+
+-----------
+3. A python program to create a regular expression to retrieve all words having 5 characters length.
+
+import re
+
+def retrieve_words_with_5_characters(text):
+    pattern = r'\b\w{5}\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "Python is a great programming language."
+result = retrieve_words_with_5_characters(text)
+print(result)
+
+
+4. A python program to create a regular expression to retrieve all words having 5 characters length using search().
+
+import re
+
+def retrieve_words_with_5_characters_search(text):
+    pattern = r'\b\w{5}\b'
+    match = re.search(pattern, text)
+    if match:
+        return match.group()
+    else:
+        return None
+
+text = "Python is a great programming language."
+result = retrieve_words_with_5_characters_search(text)
+print(result)
+
+
+5. A python program to create a regular expression to retrieve all words having length of at least 4 characters.
+
+import re
+
+def retrieve_words_with_at_least_4_characters(text):
+    pattern = r'\b\w{4,}\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "The quick brown fox jumps over the lazy dog."
+result = retrieve_words_with_at_least_4_characters(text)
+print(result)
+
+
+6. A python program to create a regular expression to retrieve all words having length of 3 or 4 or 5 characters.
+
+import re
+
+def retrieve_words_with_3_4_5_characters(text):
+    pattern = r'\b\w{3,5}\b'
+    words = re.findall(pattern, text)
+    return words
+
+text = "Python is a great programming language."
+result = retrieve_words_with_3_4_5_characters(text)
+print(result)
+
+7. A python program to create a regular expression to retrieve only single digits from a string.
+
+import re
+
+def retrieve_single_digits(text):
+    pattern = r'\b\d\b'
+    digits = re.findall(pattern, text)
+    return digits
+
+text = "The number 5 is less than 10."
+result = retrieve_single_digits(text)
+print(result)
+
+
+8. A python program to create a regular expression to retrieve the last word of a string, if it starts with t.
+
+import re
+
+def retrieve_last_word_starting_with_t(text):
+    pattern = r'\b[tT]\w+\b'
+    words = re.findall(pattern, text)
+    if words:
+        return words[-1]  # Return the last word matching the pattern
+    else:
+        return None
+
+text = "The cat sat on the mat."
+result = retrieve_last_word_starting_with_t(text)
+print(result)
+
+text = "I have an apple."
+result = retrieve_last_word_starting_with_t(text)
+print(result)
+
+
+
+
+9. A python program to create a regular expression to retrieve the phone number of a person from string.
+
+import re
+
+def retrieve_phone_number(text):
+    pattern = r'\b\d{10}\b'
+    phone_numbers = re.findall(pattern, text)
+    return phone_numbers
+
+text = "My phone number is 1234567890. Please contact me."
+result = retrieve_phone_number(text)
+print(result)
+
+
+
+10. A python program to create a regular expression to retrieve only name but not the phone number of a person from string.
+
+import re
+
+def retrieve_name_without_phone_number(text):
+    pattern = r'\b[A-Za-z]+\b(?!\s*\d{3}-\d{3}-\d{4})'
+    names = re.findall(pattern, text)
+    return names
+
+text = "My name is Nirmal and my phone number is 123-456-7890."
+result = retrieve_name_without_phone_number(text)
+print(result)
+
+
+11. A python program to create a regular expression to retrieve birth date from a string.
+
+import re
+
+def retrieve_birth_date(text):
+    pattern = r'\b\d{2}/\d{2}/\d{4}\b'
+    dates = re.findall(pattern, text)
+    return dates
+
+text = "My birth date is 16/03/2001."
+result = retrieve_birth_date(text)
+print(result)
+
+
+12. A python program to create a regular expression to search whether a given string is starting with ‘He’ or not.
+
+import re
+
+def starts_with_he(text):
+    pattern = r'^He'
+    match = re.search(pattern, text)
+    if match:
+        return True
+    else:
+        return False
+
+text = "Hello, how are you?"
+result = starts_with_he(text)
+print(result)
+
+text = "They are happy."
+result = starts_with_he(text)
+print(result)
+
+
+13. A python program to create a regular expression to search for a word at the ending of a string.
+
+import re
+
+def search_word_at_end(text, word):
+    pattern = r'\b' + re.escape(word) + r'\b'
+    match = re.search(pattern, text)
+    if match:
+        return True
+    else:
+        return False
+
+text = "I like apples."
+word = "apples"
+result = search_word_at_end(text, word)
+print(result)
+
+
+14. A python program to create a regular expression to search for a word at the ending of a string by ignoring the case.
+
+import re
+
+def search_word_at_end_ignore_case(text, word):
+    pattern = r'\b' + re.escape(word) + r'\b'
+    match = re.search(pattern, text, re.IGNORECASE)
+    if match:
+        return True
+    else:
+        return False
+
+text = "I like apples."
+word = "apples"
+result = search_word_at_end_ignore_case(text, word)
+print(result)
+
+text = "I like oranges."
+word = "APPLES"
+result = search_word_at_end_ignore_case(text, word)
+print(result)
+
+
+15. A python program to create a regular expression to retrieve marks and names from a given string.
+
+import re
+
+def retrieve_marks_and_names(text):
+    pattern = r'(\d+) marks for (\w+)'
+    matches = re.findall(pattern, text)
+    return matches
+
+text = "Rutika scored 80 marks for Math. Alice scored 90 marks for Science."
+result = retrieve_marks_and_names(text)
+print(result)
+
+
+16. A python program to create a regular expression to retrieve the timing s either ‘am’ or ‘pm’.
+
+import re
+
+def retrieve_timings(text):
+    pattern = r'\b\d{1,2}:\d{2}\s*[AP]M\b'
+    timings = re.findall(pattern, text, re.IGNORECASE)
+    return timings
+
+text = "The meeting is scheduled for 10:30 AM. Please be on time."
+result = retrieve_timings(text)
+print(result)
+
+text = "The event starts at 2:00 pm."
+result = retrieve_timings(text)
+print(result)
+
+
+17. A python program to create a regular expression to find all words starting with ’an’ or ’ak’ .
+
+import re
+
+def find_words_starting_with_an_or_ak(text):
+    pattern = r'\b(?:an|ak)\w+\b'
+    words = re.findall(pattern, text, re.IGNORECASE)
+    return words
+
+text = "She has an apple and an orange. Akash bought an akita dog."
+result = find_words_starting_with_an_or_ak(text)
+print(result)
+
+text = "The answer is not always straightforward."
+result = find_words_starting_with_an_or_ak(text)
+print(result)
+
+
+
+---------------
+
+#Using regular expressions display the last word of a string if it starts with ‘P’.
+import re
+
+def get_last_word_starting_with_p(string):
+    pattern = r'\bP\w*\b'
+    matches = re.findall(pattern, string)
+    if matches:
+        last_word = matches[-1]
+        return last_word
+    else:
+        return None
+
+text = "This is a sample string. Python programming language is powerful."
+last_word = get_last_word_starting_with_p(text)
+if last_word:
+    print("Last word starting with 'P':", last_word)
+else:
+    print("No word starting with 'P' found.")
+
+-------------------
+
+#Extract Email Addresses from a String:
+
+import re
+
+def extract_email_addresses(string):
+    pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
+    email_addresses = re.findall(pattern, string)
+    return email_addresses
+
+# Example usage
+text = "Contact us at info@example.com or support@example.org"
+email_list = extract_email_addresses(text)
+print("Email Addresses:")
+for email in email_list:
+    print(email)
+
+
+------------------
+
+#Validate a Phone Number:
+import re
+
+def validate_phone_number(phone_number):
+    pattern = r'^\d{3}-\d{3}-\d{4}$'
+    if re.match(pattern, phone_number):
+        return True
+    else:
+        return False
+
+phone = "123-456-7890"
+if validate_phone_number(phone):
+    print("Valid phone number.")
+else:
+    print("Invalid phone number.")
+
+---------------
+#Remove Extra Whitespaces from a String:
+import re
+
+def remove_extra_whitespaces(string):
+    pattern = r'\s+'
+    modified_string = re.sub(pattern, ' ', string)
+    return modified_string
+
+# Example usage
+text = "   This     is   a   string   with   extra   spaces.   "
+cleaned_text = remove_extra_whitespaces(text)
+print("Cleaned Text:", cleaned_text)
+
+
+-------------
+#Find All Dates in a String:
+import re
+
+def find_dates(string):
+    pattern = r'\b\d{1,2}/\d{1,2}/\d{4}\b'
+    dates = re.findall(pattern, string)
+    return dates
+
+
+text = "The event will take place on 10/25/2022 and 11/01/2022"
+date_list = find_dates(text)
+print("Dates:")
+for date in date_list:
+    print(date)
+
+--------------------
+#DataScienceCSV
+
+import pandas as pd
+
+df = pd.read_excel("Data.xlsx", "111")
+df
+
+import pandas as pd
+
+df = pd.read_csv("indian_foodPrice.csv")
+df
+
+
+import pandas as pd
+
+empdata = {"empid": [1001, 1002, 1003, 1004, 1005, 1006,1007,1008],
+"ename": ["Kaushika","Jitendra","Munmun","Gungun","Ram","Shyam","Sa
+m","Peter"],
+"Phn. No": [7842798249,7842798300,7842798351,7842798402,7842798453,7
+842798504,7842798555,7842798606],
+"City": ["Surat","Lucknow","Balia","Mumbai","Banaras","Gorakhpur","N
+ew Zealand","London"],
+}
+df = pd.DataFrame(empdata)
+df
+
+
+import pandas as pd
+
+EmpList = [(1,"Kaushika","Surat"),(2,"Jitendra","Surat"), (3,"Munmun","Bali
+a")]
+df1 = pd.DataFrame(EmpList)
+df1
+
+
+import pandas as pd
+
+df = pd.read_csv("indian_foodPrice.csv")
+df
+
+
+----
+df.shape
+----
+r,c = df.shape
+
+print("Number of rows:" ,r)
+print("Number if columns:",c)
+----
+df.head()
+----
+df.head(10)
+----
+df.tail()
+----
+df.tail(3)
+----
+df[2:5]
+----
+# to display the rows in reverse order, we can use negative step size in slici
+
+ng
+df[5:0:-1]
+-----
+df.columns
+--
+# To retrieve Column Data
+
+df.name
+----
+df[['name', 'Price']]
+---
+df['Price'].max()
+---
+df['Price'].min()
+--
+df.describe()
+--
+df[df.Price>500]
+--
+dff = df[df.Price < 150]
+
+dff.shape
+---
+df[df.Price == 150]
+---
+df[df.Price == df.Price.min()]
+---
+df[['name']][df.Price<150]
+---
+df.index
+---
+df11= df.set_index('Price')
+df11
+---
+DFEmp.set_index('Id',inplace=True)
+---
+DFEmp.loc[1001]
+---
+DFEmp.loc[1010]
+---
+#Resetting the Index
+
+DFEmp.reset_index(inplace=True)
+---
+# Sorting the Data
+import pandas as pd
+DFEmp = pd.read_csv("Emp.csv")
+DFEmp
+SortedEmp = DFEmp.sort_values('DOJ')
+SortedEmp
+---
+SortedEmp = DFEmp.sort_values('DOJ', ascending=False)
+SortedEmp
+import pandas as pd
+
+TempEmp = pd.read_csv("Emp.csv")
+TempEmp
+
+--
+df1 = TempEmp.fillna(0)
+df1
+
+--
+df1 = TempEmp.fillna({'name': 'Xyz', 'Id': 1021, 'DOJ': '2001/02/20'})
+df1
+---
+df2 =TempEmp.dropna()
+---
+
+#DataScience
+
+#bar
+import matplotlib.pyplot as plt
+
+import pandas as pd
+Emp = pd.read_csv("EmployeeSales.csv")
+Emp
+
+x = Emp['Id']
+y = Emp['Salary']
+plt.xlabel('Employee ids')
+plt.ylabel('Employee Salary')
+plt.title('Comparision of Employee Salaries')
+plt.bar(x, y, label='Employee data',width=0.9,color='red')
+plt.show()
+
+
+plt.barh(x, y, label='Employee data', color='blue')
+
+-----
+
+import matplotlib.pyplot as plt
+
+import pandas as pd
+EmpP = pd.read_csv("EmployeeProduction.csv")
+EmpP
+
+----
+
+x1 = EmpP['Id']
+y1 = EmpP['Salary']
+plt.bar(x, y, label='Sales Department', color='blue')
+plt.bar(x1, y1, label='Production Department', color='red')
+
+---
+age = EmpP['Age']
+
+age
+bins = [20,25,30,35,40,45]
+plt.hist(age, bins, histtype='bar', rwidth=0.6, color='gold')
+
+plt.xlabel('Employee Ages')
+plt.ylabel('No. of Employees')
+plt.title('Ages Catagories')
+----
+
+plt.hist(age, bins, histtype='step', rwidth=0.1, color='gold')
+
+plt.xlabel('Employee Ages')
+plt.ylabel('No. of Employees')
+plt.title('Ages Catagories')
+
+----
+import matplotlib.pyplot as plt
+
+slices = [40,30,20,10]
+depts = ['Sales','Production','HR','Finance']
+cols = ['magenta','yellow','brown','blue']
+plt.pie(slices,labels=depts,colors=cols, startangle=90, explode=(0.2,0.2,0.2,
+0.2), shadow=False, autopct='%.1f%%')
+plt.title('Department Strength')
+
+--------------------
+#Define a module containing math functions like
+a. Add
+b. Subtract
+c. Multiply
+d. Divide
+Create a module to create a decor to print name of the math
+function, import math and decor in third file to use the function
+defined in math module and print name using decor module.
+
+#math_functions.py
+
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    return a / b
+
+
+#math_decorator.py
+
+def math_decorator(func):
+    def wrapper(*args):
+        print(f"Calling {func.__name__} function...")
+        return func(*args)
+    return wrapper
+
+
+#main.py
+from math_functions import add, subtract, multiply, divide
+from math_decorator import math_decorator
+
+@math_decorator
+def test_math_functions():
+    print(add(2, 3))
+    print(subtract(5, 1))
+    print(multiply(4, 6))
+    print(divide(10, 2))
+
+test_math_functions()
+
+========================================================================================
+
+#Define a module geometric containing functions to calculate
+area of
+a. Square
+b. Rectangle
+c. Circle
+d. Triangle
+e. IsSquare
+Create a module to create a decor to print name of the
+Geometirc function, import Geometirc and decor in third file to
+use the function defined in Geometirc module and print name
+using decor module.
+
+
+#geometric.py
+
+import math
+
+def area_square(side):
+    return side ** 2
+
+def area_rectangle(length, width):
+    return length * width
+
+def area_circle(radius):
+    return math.pi * radius ** 2
+
+def area_triangle(base, height):
+    return 0.5 * base * height
+
+def is_square(side1, side2, side3, side4):
+    return side1 == side2 == side3 == side4
+
+
+#decor.py
+
+def print_function_name(func):
+    def wrapper(*args, **kwargs):
+        print("Calling function:", func.__name__)
+        return func(*args, **kwargs)
+    return wrapper
+
+#main.py
+
+from geometric import area_square, area_rectangle, area_circle, area_triangle, is_square
+from decor import print_function_name
+
+@print_function_name
+def calculate_area():
+    print("Area of square:", area_square(5))
+    print("Area of rectangle:", area_rectangle(3, 4))
+    print("Area of circle:", area_circle(2))
+    print("Area of triangle:", area_triangle(5, 2))
+    print("Is square?", is_square(4, 4, 4, 4))
+
+calculate_area()
+
+
+========================================================================================
+#Write a function to return an integer, write one decorator to
+increment the value by returned by function, write another
+decorator to multiply the value by 2. Print the results, then
+change the order of decorator applied and print the result.
+
+def my_function():
+    return 5
+
+def increment_decorator(func):
+    def wrapper():
+        return func() + 1
+    return wrapper
+
+def multiply_decorator(func):
+    def wrapper():
+        return func() * 2
+    return wrapper
+
+decorated_function = increment_decorator(multiply_decorator(my_function))
+print(decorated_function())
+
+decorated_function = multiply_decorator(increment_decorator(my_function))
+print(decorated_function()) 
+
+
+--------
+#Write a python program to create a dictionary with the employee details and retrieve the value upon giving the keys.
+
+employee = {
+    "id": "1234",
+    "name": "Nirmal Prajapati",
+    "department": "IT",
+    "salary": 50000
+}
+
+key = "name"
+value = employee.get(key)
+
+print(f"The value for key '{key}' is '{value}'")
+
+======================================================================================================================
+
+#Write a python program to retrieve keys, values and key-value pair from a dictionary.
+
+sample_dict = {"apple": 2, "banana": 5, "orange": 1, "pear": 3}
+
+keys = sample_dict.keys()
+print("Keys:", keys)
+
+values = sample_dict.values()
+print("Values:", values)
+
+items = sample_dict.items()
+print("Key-value pairs:", items)
+
+
+=======================================================================================================================
+
+#Write a python program to create a dictionary and find the sum of values.(Use eval & sinput method).
+
+
+dict_str = input("Enter dictionary as string: ")
+
+dictionary = eval(dict_str)
+
+sum_values = sum(dictionary.values())
+
+print("Sum of values:", sum_values)
+
+=======================================================================================================================
+
+#Write a python program to create a dictionary from keyboard and display the elements.
+
+print("Enter key-value pairs (separated by a space), or type 'done' to finish:")
+
+my_dict = {}
+
+while True:
+    input_str = input("> ")
+    if input_str == "done":
+        break
+    key, value = input_str.split()
+    value = int(value)
+    my_dict[key] = value
+
+print("Dictionary contents:")
+for key, value in my_dict.items():
+    print(key, "->", value)
+=====================================================================================================================
+
+# create a dictionary with cricket player's names and scores in a match
+
+cricket_scores = {
+    "Sachin": 78,
+    "Virat": 120,
+    "Rohit": 64,
+    "Dhoni": 45,
+    "Rahul": 89
+}
+
+player_name = input("Enter the player's name: ")
+if player_name in cricket_scores:
+    print(f"{player_name} scored {cricket_scores[player_name]} runs.")
+else:
+    print(f"{player_name} didn't play in this match.")
+=====================================================================================================================
+
+#Write a python program to show the usage of for loop to retrieve elements of dictionaries.
+
+student_scores = {
+    "Nirmal": 85,
+    "Him": 72,
+    "Abhi": 90,
+    "Mayur": 68,
+    "Abhay": 92
+}
+
+for key in student_scores:
+    value = student_scores[key]
+    print(f"{key} scored {value} marks.")
+
+=====================================================================================================================
+
+#Write a python program to find the number of occurrences of each letter in a string using dictionary.
+
+input_string = input("Enter a string: ")
+
+letter_counts = {}
+
+for char in input_string:
+    if char.isalpha():
+        lowercase_char = char.lower()
+        if lowercase_char in letter_counts:
+            letter_counts[lowercase_char] += 1
+        else:
+            letter_counts[lowercase_char] = 1
+
+for letter in letter_counts:
+    count = letter_counts[letter]
+    print(f"{letter}: {count}")
+
+=====================================================================================================================
+
+#Write a python program to sort the elements of a dictionary based on a key or values.(use lambda function)
+
+student_scores = {
+    "Nirmal": 85,
+    "Him": 72,
+    "Abhi": 90,
+    "Mayur": 68,
+    "Abhay": 92
+}
+
+sorted_by_keys = dict(sorted(student_scores.items(), key=lambda x: x[0]))
+
+print("Sorted by keys:")
+for key, value in sorted_by_keys.items():
+    print(f"{key}: {value}")
+
+sorted_by_values = dict(sorted(student_scores.items(), key=lambda x: x[1]))
+
+print("Sorted by values:")
+for key, value in sorted_by_values.items():
+    print(f"{key}: {value}")
+
+
+-------------------------
+
+
+#10_1
+
+class UserNotFoundException(Exception):
+    pass
+
+user_cities = {
+    "Nirmal": "Surat",
+    "Him": "Navsari",
+    "Abhi": "Ahemdabad"
+}
+
+try:
+    name = input("Enter name to find their city: ")
+    
+    if name in user_cities:
+        city = user_cities[name]
+        print(f"{name}'s city is {city}")
+    else:
+        raise UserNotFoundException("User not found!")
+        
+except UserNotFoundException as error:
+    print("Oops! UserNotFoundException occurred:", error)
+
+
+=================================================================================
+
+#10_2
+
+class TooSmallValue(Exception):
+    pass
+
+class TooLargeValue(Exception):
+    pass
+
+n = int(input("Enter a specific number: "))
+
+while True:
+    try:
+        value = int(input("Enter a value: "))
+        
+        if value < n:
+            raise TooSmallValue("Entered value is too small!")
+        elif value > n:
+            raise TooLargeValue("Entered value is too large!")
+            
+        else:
+            print("Congratulations, you entered the correct value!")
+            break
+            
+    except TooSmallValue as error:
+        print("Oops! TooSmallValue occurred:", error)
+        
+    except TooLargeValue as error:
+        print("Oops! TooLargeValue occurred:", error)
+====================================================================================
+
+#10_3
+
+class NotSuitableValueException(Exception):
+    pass
+
+def check_positive_digit(value):
+    try:
+        if not value.isdigit():
+            raise NotSuitableValueException("Invalid input. Please enter a positive digit.")
+        elif int(value) <= 0:
+            raise NotSuitableValueException("Invalid input. Please enter a positive digit.")
+        else:
+            print("Valid input. You entered a positive digit.")
+    except NotSuitableValueException as e:
+        print(str(e))
+
+value = input("Enter a positive digit: ")
+check_positive_digit(value)
+
+===================================================================================
+
+#10_4
+
+class LowBalanceException(Exception):
+    pass
+
+account_data = {
+    "Nirmal": 5000,
+    "Him": 2500,
+    "Abhi": 1000
+}
+
+def check_balance(username):
+    try:
+        if account_data[username] < 2000:
+            raise LowBalanceException(f"Low balance: {account_data[username]} INR. Minimum balance required is 2000 INR.")
+        else:
+            print(f"Current balance for {username}: {account_data[username]} INR.")
+    except KeyError:
+        print(f"Error: {username} is not a valid user.")
+
+check_balance("Nirmal")  
+check_balance("Him")  
+check_balance("Abhi")   
+check_balance("Mayur") 
+
+
+=========================================================================================
+
+#Write lambda function to find maximum value from two numbers
+
+maximum = lambda a, b: a if a > b else b
+
+result = maximum(5, 10)
+print(result) 
+
+==================================================================
+
+#Write a lambda	function to find modulo	of given number
+
+mod = lambda x, y: x % y
+
+result = mod(12,5)
+print(result) 
+
+==================================================================
+#Use filter to find odd values from a list. Use lambda function to
+write function.
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+odd_numbers = list(filter(lambda x: x % 2 != 0, numbers))
+
+print(odd_numbers)
+
+=================================================================
+#Use filter function to find values greater than 10 and less than
+500 function.
+values = [2, 15, 87, 200, 550, 13, 450, 1, 600]
+
+filtered_values = list(filter(lambda x: x > 10 and x < 500, values))
+
+print(filtered_values)
+
+
+==================================================================
+
+#Use map to find square for each values of the list. Use lambda
+function to write function.
+
+numbers = [1, 2, 3, 4, 5]
+
+squares = list(map(lambda x: x ** 2, numbers))
+
+print(squares)
+
+===================================================================
+
+#Use filter function to extract vowels from given list of
+alphabets.
+
+alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+
+vowels = list(filter(lambda x: x in ['a', 'e', 'i', 'o', 'u'], alphabets))
+
+print(vowels)
+
+====================================================================
+
+#Use map function to increase salary by 25% of all employees.
+
+employees = [{'name': 'Nirmal', 'salary': 50000},
+             {'name': 'Abhi', 'salary': 75000},
+             {'name': 'Mayur', 'salary': 10000},
+	     {'name': 'Him', 'salary': 15000}]
+
+new_salaries = list(map(lambda emp: {'name': emp['name'], 'salary': emp['salary']*1.25}, employees))
+
+print(new_salaries) 
+
+====================================================================
+#Write a Python program to convert all the characters into
+uppercase. Use map.
+
+string = "Nirmal Prajapati"
+
+upper_string = ''.join(map(str.upper, string))
+
+print(upper_string) 
+
+
+#Write a function to add, subtract, multiply and divide two numbers using function and return the result in list.
+
+def perform_operations(num1, num2):
+    add_result = num1 + num2
+    subtract_result = num1 - num2
+    multiply_result = num1 * num2
+    divide_result = num1 / num2
+    
+    results = [add_result, subtract_result, multiply_result, divide_result]
+    return results
+
+num1 = float(input("Enter the first number: "))
+num2 = float(input("Enter the second number: "))
+
+result_list = perform_operations(num1, num2)
+
+print("The results of the arithmetic operations on", num1, "and", num2, "are:")
+print("Sum:", result_list[0])
+print("Difference:", result_list[1])
+print("Product:", result_list[2])
+print("Quotient:", result_list[3])
+
+
+=================================================================================================================
+
+#Write a function to find even numbers and return a list.
+
+def find_even_numbers(num_list):
+    even_numbers = []
+    for num in num_list:
+        if num % 2 == 0:
+            even_numbers.append(num)
+    return even_numbers
+list = [12,2,3,4,4,5,5,6,6]
+print(find_even_numbers(list))
+
+
+=================================================================================================================
+
+#Write a function to find odd numbers and return a list.
+
+def find_even_numbers(num_list):
+    even_numbers = []
+    for num in num_list:
+        if num % 2 != 0:
+            even_numbers.append(num)
+    return even_numbers
+list = [12,2,3,4,4,5,5,6,6]
+print(find_even_numbers(list))
+
+================================================================================================================
+
+#Write a function to find prime numbers	and return a list.
+
+def find_prime_numbers(num_list):
+    prime_numbers = []
+    for num in num_list:
+        if num > 1:
+            for i in range(2, num):
+                if num % i == 0:
+                    break
+            else:
+                prime_numbers.append(num)
+    return prime_numbers
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+prime_numbers = find_prime_numbers(numbers)
+print(prime_numbers) 
+
+=================================================================================================================
+
+#Write a Python function to multiply all the numbers in	a list.(Numbers can be	negative, positive or zero).
+list  = [1,2,3,-5,2,5]
+
+def multiplylist(list):
+	
+  result = 1
+  for i in list:
+        result = result * i
+  return result
+
+
+print(multiplylist(list))
+
+================================================================================================================
+
+#Write a Python function to calculate the factorial of	a number.The function accepts the number as an argument.
+
+
+def fact(num):
+	fact =1
+	for i in range(1,num + 1):
+		fact = fact*i
+	print("The factorial of",num,"is",fact)
+
+fact(5)
+
+================================================================================================================
+
+#Write a python function that takes list and returns a new list with distinct elements from a list
+
+list  = [44,55,55,33,22,22]
+
+def checklist(list):
+  num = []
+  for i in list:
+    if i not in num:
+      num.append(i)
+  return num
+
+print('Distinct values are')
+print(checklist(list))
+
+================================================================================================================
+
+#Write a python function to find the largest item from a given list.
+
+list = []
+
+num= int(input('Enter the size of list'))
+
+for n in range(num):
+    number = int(input('Enter number: '))
+    list.append(number)
+
+def checklarge(list):
+	
+	print("Largest element is:", max(list))
+
+checklarge(list) 
+
+===============================================================================================================
+
+#Write a function to add up all the numbers in a list.
+
+list = []
+n = int(input("Enter number of elements:"))
+
+for i in range(0,n):
+	ele = int(input())
+	list.append(ele)
+print('Current List Values')
+print(list)
+
+
+def sum(list):
+    total = 0
+    for x in list:
+        total += x
+    return total
+print('Addition of list values:=',sum(list))
+
+================================================================================================================
+
+#Write a function takes a list of strings and returns a new list that contains capitalized strings.
+
+def capitalize_strings():
+    lst = input("Enter a list of strings separated by spaces: ").split()
+    return [s.capitalize() for s in lst]
+
+print(capitalize_strings())
+
+================================================================================================================
+
+#Write a function called middle that takes a list and returns a new list that contains all but the first and last elements should be removed. So middle([1,2,3,4]) should return [2,3].
+
+def middle():
+    lst = input("Enter a list of integers separated by spaces: ").split()
+    return [int(x) for x in lst[1:-1]]
+
+print(middle())
+
+================================================================================================================
+
+#Write a function which breaks a string into individual letters.
+
+def string_to_letters():
+    s = input("Enter a string: ")
+    return list(s)
+
+
+print(string_to_letters())
+
+================================================================================================================
+
+#Write a function which takes a list of strings and concatenates the elements
+
+def concatenate_strings():
+    lst = input("Enter a list of strings separated by spaces: ").split()
+    return ''.join(lst)
+
+
+print(concatenate_strings())
+
+================================================================================================================
+
+#Write a function that takes a list and returns a new list with distinct elements from the first list
+
+list = []
+n = int(input("Enter number of elements : "))
+
+for i in range(0, n):
+	print("Enter {0} Element".format(i+1))
+	ele = int(input())
+	list.append(ele)
+print('Current List Values')
+print(list)
+
+
+def checklist(list):
+  num = []
+  for a in list:
+    if a not in num:
+      num.append(a)
+
+  return num
+
+print('Distinct Values from List')
+print(checklist(list))
+
+================================================================================================================
+
+#Using List Comprehension to Iterate through a String.
+
+lst = [ letter for letter in 'Nirmal' ]
+
+print(lst)
+
+================================================================================================================
+
+#Please check in the range from 0 – 9 if the item’s value is divisible by 2.
+
+number_list = [ x for x in range(0,9) if x % 2 == 0]
+print(number_list)
+
+===============================================================================================================
+
+#Check the five numbers from 0 to 9. If y is divisible by 2, then even is appended to the obj list.
+If not, odd is appended.
+
+obj = ["Even" if i%2==0 else "Odd" for i in range(0,9)]
+print(obj)
+
+===============================================================================================================
+
+#Finding the elements in a list in which elements are ended with the letter ‘b’ and the length of
+that element is greater than 2.
+
+names = ['Nirmal','Bob']
+final_names = [name for name in names if name.lower().endswith('b') and len(name) > 2]
+print(final_names);	
+
+
+===============================================================================================================
+
+
+#Add two list X & Y and display the result.
+
+X = [1, 2, 3]
+Y = [4, 5, 6]
+
+result = [X[i] + Y[i] for i in range(len(X))]
+
+print(result)
+
+
+================================================================================================================
+
+#Lets take two list L1 & L2 with numbers and create another list L3 with numbers present in L1 but
+not in L2.
+
+L1 = [1, 2, 3, 4, 5]
+L2 = [3, 5, 7, 9]
+L3 = [x for x in L1 if x not in L2]
+
+
+print(L3)
+
+===============================================================================================================
+
+
+
+
+
+
+
+
